@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDUGUAT – Pitch de Inversión 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bd: #07111F;
+  --bm: #0E2040;
+  --blue: #1A4FAB;
+  --bluel: #4A90E2;
+  --blueb: #5DADE2;
+  --y: #F5C518;
+  --yl: #FFD966;
+  --yg: rgba(245,197,24,0.18);
+  --wh: #FFFFFF;
+  --ws: rgba(255,255,255,0.82);
+  --wd: rgba(255,255,255,0.38);
+  --gl: rgba(255,255,255,0.055);
+  --gb: rgba(255,255,255,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bd);color:var(--wh);}
+
+/* ─── DECK WRAPPER ─── */
+#deck{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+}
+
+/* ─── TOP BAR ─── */
+#topbar{
+  position:relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;
+  background:rgba(7,17,31,0.92);
+  border-bottom:1px solid var(--gb);
+  backdrop-filter:blur(16px);
+  flex-shrink:0;
+}
+.tb-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:2px;color:var(--y);}
+.tb-logo span{color:var(--wh);}
+.tb-dots{display:flex;gap:6px;align-items:center;}
+.tb-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--gb);border:1px solid var(--gb);
+  cursor:pointer;transition:all .25s;
+}
+.tb-dot.active{background:var(--y);border-color:var(--y);box-shadow:0 0 8px var(--y);}
+.tb-dot:hover{background:var(--wd);}
+.tb-slide-info{font-size:12px;color:var(--wd);letter-spacing:1px;}
+
+/* ─── VIEWPORT ─── */
+#viewport{
+  flex:1;position:relative;overflow:hidden;
+}
+
+/* ─── SLIDES ─── */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:48px 72px;
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(60px);
+  transition:opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.slide.active{
+  opacity:1;pointer-events:all;transform:translateX(0);
+}
+.slide.exit-left{
+  opacity:0;transform:translateX(-60px);transition:opacity .35s ease,transform .35s ease;
+}
+
+/* grid bg */
+.slide::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(74,144,226,0.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,144,226,0.035) 1px,transparent 1px);
+  background-size:54px 54px;pointer-events:none;
+}
+
+/* ─── BOTTOM NAV ─── */
+#bottomnav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;
+  background:rgba(7,17,31,0.92);
+  border-top:1px solid var(--gb);
+  flex-shrink:0;
+}
+.nav-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--gl);border:1px solid var(--gb);
+  color:var(--wh);border-radius:30px;
+  padding:10px 24px;font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;
+}
+.nav-btn:hover{background:rgba(74,144,226,0.15);border-color:var(--bluel);}
+.nav-btn:disabled{opacity:.25;cursor:default;pointer-events:none;}
+.nav-btn.next{background:var(--y);color:var(--bd);border-color:var(--y);font-weight:700;box-shadow:0 0 24px rgba(245,197,24,0.35);}
+.nav-btn.next:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(245,197,24,0.5);}
+#progress-track{flex:1;height:3px;margin:0 24px;background:var(--gl);border-radius:2px;overflow:hidden;}
+#progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--y));border-radius:2px;transition:width .4s ease;}
+
+/* ─── SECTION TAGS ─── */
+.stag{
+  display:inline-block;
+  background:var(--yg);border:1px solid rgba(245,197,24,0.5);
+  color:var(--y);border-radius:4px;
+  padding:4px 12px;font-size:11px;
+  letter-spacing:2px;font-weight:600;text-transform:uppercase;
+  margin-bottom:18px;
+}
+.stitle{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(30px,4vw,52px);font-weight:800;line-height:1.08;
+  margin-bottom:14px;
+}
+.stitle em{color:var(--y);font-style:normal;}
+.sdesc{font-size:15px;color:var(--wd);max-width:640px;line-height:1.75;margin-bottom:36px;}
+
+/* ─── ORB ─── */
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+
+/* ════════════ SLIDE SPECIFIC ════════════ */
+
+/* S1 HERO */
+#s1{
+  background:radial-gradient(ellipse 70% 65% at 65% 40%,rgba(26,79,171,0.38) 0%,transparent 70%),var(--bd);
+  align-items:center;text-align:center;
+}
+.hero-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(80px,13vw,148px);
+  font-weight:800;line-height:.9;letter-spacing:-2px;
+}
+.hero-title .blue{color:var(--blueb);}
+.hero-title .gold{color:var(--y);text-shadow:0 0 60px rgba(245,197,24,0.4);}
+.hero-sub{font-size:17px;color:var(--ws);margin:22px 0 36px;max-width:560px;line-height:1.65;font-weight:300;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:40px;padding:8px 20px;
+  font-size:12px;color:var(--y);font-weight:500;
+  margin-bottom:28px;
+}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--y);box-shadow:0 0 10px var(--y);animation:blink 1.8s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-stats{display:flex;gap:52px;margin-top:48px;justify-content:center;flex-wrap:wrap;}
+.hstat{text-align:center;}
+.hstat-n{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:800;color:var(--y);display:block;line-height:1;}
+.hstat-l{font-size:12px;color:var(--wd);margin-top:4px;}
+
+/* S2 PROBLEMA */
+#s2{background:linear-gradient(150deg,var(--bd) 0%,#0C1D38 100%);}
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;}
+.pcard{
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:16px;padding:28px;
+  transition:transform .3s,border-color .3s;position:relative;overflow:hidden;
+}
+.pcard::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--blueb));}
+.pcard:hover{transform:translateY(-5px);border-color:var(--bluel);}
+.pcard-icon{font-size:32px;margin-bottom:14px;}
+.pcard-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;margin-bottom:10px;}
+.pcard-text{font-size:13px;color:var(--wd);line-height:1.65;}
+
+/* S3 SOLUCIÓN */
+#s3{background:radial-gradient(ellipse 65% 65% at 80% 50%,rgba(245,197,24,0.05) 0%,transparent 65%),var(--bd);}
+.fcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;}
+.fcard{
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:14px;padding:22px;
+  transition:all .28s;
+}
+.fcard:hover{border-color:var(--y);box-shadow:0 0 24px rgba(245,197,24,0.1);transform:translateY(-4px);}
+.ficon{width:44px;height:44px;border-radius:10px;background:var(--yg);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.ftitle{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;margin-bottom:7px;}
+.ftext{font-size:12px;color:var(--wd);line-height:1.6;}
+
+/* S4 TRACCION */
+#s4{background:linear-gradient(180deg,var(--bd) 0%,#0C2040 100%);}
+.trac-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;width:100%;align-items:start;}
+.clist{display:flex;flex-direction:column;gap:12px;}
+.ccard{
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:12px;padding:16px 22px;
+  display:flex;align-items:center;gap:14px;transition:border-color .25s;
+}
+.ccard:hover{border-color:var(--y);}
+.cbadge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.cb-sub{background:rgba(93,173,226,0.18);color:var(--blueb);}
+.cb-uni{background:var(--yg);color:var(--y);}
+.cname{font-weight:600;font-size:14px;}
+.camount{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--y);}
+.metrics{display:flex;flex-direction:column;gap:18px;}
+.mbar-header{display:flex;justify-content:space-between;margin-bottom:6px;}
+.mbar-lbl{font-size:12px;color:var(--wd);}
+.mbar-val{font-size:12px;font-weight:600;color:var(--y);}
+.mbar-bg{height:7px;border-radius:4px;background:rgba(255,255,255,0.07);overflow:hidden;}
+.mbar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--y));width:0%;transition:width 1.2s ease;}
+.tech-pill{
+  margin-top:20px;padding:16px 20px;border-radius:12px;
+  background:rgba(245,197,24,0.06);border:1px solid rgba(245,197,24,0.28);
+}
+.tech-pill p:first-child{font-size:12px;color:var(--y);font-weight:600;margin-bottom:5px;}
+.tech-pill p:last-child{font-size:11px;color:var(--wd);}
+
+/* S5 MODELO */
+#s5{background:radial-gradient(ellipse 75% 60% at 20% 50%,rgba(26,79,171,0.22) 0%,transparent 60%),var(--bd);}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:100%;margin-bottom:24px;}
+.pcard2{border-radius:18px;padding:32px;position:relative;overflow:hidden;transition:transform .3s;}
+.pcard2:hover{transform:translateY(-6px);}
+.pcard2.pri{background:linear-gradient(140deg,var(--blue) 0%,#0D3589 100%);border:2px solid var(--bluel);}
+.pcard2.feat{background:linear-gradient(140deg,#291600 0%,#4A2800 100%);border:2px solid var(--y);box-shadow:0 0 50px rgba(245,197,24,0.18);}
+.feat-badge{position:absolute;top:14px;right:14px;background:var(--y);color:var(--bd);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.pp{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;}
+.pp span{font-size:18px;font-weight:400;}
+.plabel{font-size:12px;color:var(--wd);margin:4px 0 18px;}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.pfeats li{display:flex;align-items:center;gap:8px;font-size:13px;}
+.pfeats li::before{content:'✓';color:var(--y);font-weight:700;}
+.market-row{
+  display:flex;gap:0;width:100%;
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:14px;overflow:hidden;
+}
+.mitem{flex:1;padding:16px 24px;text-align:center;border-right:1px solid var(--gb);}
+.mitem:last-child{border-right:none;}
+.mitem-val{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--y);}
+.mitem-lbl{font-size:11px;color:var(--wd);margin-top:3px;}
+
+/* S6 FINANCIERO */
+#s6{background:linear-gradient(160deg,var(--bd) 0%,#07152E 100%);}
+.fin-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:100%;align-items:start;}
+.chart-title{font-size:11px;color:var(--wd);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
+.bars{display:flex;align-items:flex-end;gap:10px;height:180px;margin-bottom:10px;}
+.bwrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(0deg,var(--blue),var(--blueb));
+  transition:height 1s ease;position:relative;min-height:3px;
+}
+.bar.hi{background:linear-gradient(0deg,#9A6B00,var(--y));box-shadow:0 0 18px rgba(245,197,24,0.28);}
+.bval{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;color:var(--y);white-space:nowrap;}
+.blabel{font-size:10px;color:var(--wd);}
+.fin-note{
+  margin-top:16px;padding:14px 18px;
+  border-radius:10px;background:rgba(245,197,24,0.06);
+  border:1px solid rgba(245,197,24,0.22);
+}
+.fin-note p{font-size:12px;color:var(--y);font-weight:600;}
+.fin-note small{font-size:11px;color:var(--wd);}
+.kpis{display:flex;flex-direction:column;gap:11px;}
+.kpi{
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:10px;padding:14px 18px;
+  display:flex;align-items:center;gap:16px;
+}
+.kpi-ic{width:38px;height:38px;border-radius:9px;background:var(--yg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.kpi-v{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;color:var(--y);}
+.kpi-l{font-size:11px;color:var(--wd);margin-top:1px;}
+
+/* S7 PROYECCION */
+#s7{background:radial-gradient(ellipse 60% 65% at 75% 40%,rgba(245,197,24,0.05) 0%,transparent 60%),var(--bd);}
+.timeline{display:flex;flex-direction:column;gap:0;width:100%;max-width:840px;}
+.titem{display:grid;grid-template-columns:100px 36px 1fr;align-items:start;}
+.tyear{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--y);text-align:right;padding-right:18px;padding-top:6px;}
+.tline{display:flex;flex-direction:column;align-items:center;}
+.tdot{width:14px;height:14px;border-radius:50%;background:var(--y);flex-shrink:0;margin-top:10px;box-shadow:0 0 16px var(--y);}
+.tconn{flex:1;width:2px;background:rgba(255,255,255,0.08);min-height:70px;}
+.tcontent{padding:4px 0 32px 22px;}
+.ttitle{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;}
+.ttags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
+.ttag{background:var(--gl);border:1px solid var(--gb);border-radius:20px;padding:3px 11px;font-size:11px;color:var(--wd);}
+.ttag.y{border-color:rgba(245,197,24,0.5);color:var(--y);}
+.ttag.g{border-color:rgba(80,200,120,0.4);color:#80E8B0;}
+.tamount{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--blueb);}
+
+/* S8 EQUIPO */
+#s8{background:linear-gradient(135deg,var(--bd) 0%,#0C1D38 100%);}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;width:100%;}
+.tcard{
+  background:var(--gl);border:1px solid var(--gb);
+  border-radius:16px;padding:26px 18px;text-align:center;
+  transition:all .3s;
+}
+.tcard:hover{border-color:var(--y);transform:translateY(-5px);}
+.tavatar{
+  width:66px;height:66px;border-radius:50%;
+  margin:0 auto 14px;border:2px solid var(--gb);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
+}
+.tname{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.3;}
+.trole{font-size:11px;color:var(--y);margin-bottom:7px;}
+.tdesc{font-size:11px;color:var(--wd);line-height:1.55;}
+.team-info{
+  margin-top:20px;width:100%;
+  padding:16px 24px;border-radius:12px;
+  background:var(--gl);border:1px solid var(--gb);
+  display:flex;gap:28px;flex-wrap:wrap;align-items:center;
+}
+.ti-item{font-size:12px;color:var(--wd);}
+.ti-item.hi{color:var(--y);font-weight:600;}
+
+/* S9 CTA */
+#s9{
+  background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(26,79,171,0.42) 0%,transparent 70%),var(--bd);
+  align-items:center;text-align:center;
+}
+.cta-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5.5vw,68px);font-weight:800;line-height:1.05;}
+.cta-amount{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(54px,8vw,100px);font-weight:800;
+  color:var(--y);display:block;margin:10px 0;
+  text-shadow:0 0 60px rgba(245,197,24,0.5);
+}
+.cta-sub{font-size:16px;color:var(--wd);margin:16px 0 32px;line-height:1.65;max-width:560px;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-y{background:var(--y);color:var(--bd);padding:14px 34px;border-radius:40px;font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .22s;box-shadow:0 0 28px rgba(245,197,24,0.38);font-family:'DM Sans',sans-serif;}
+.btn-y:hover{transform:translateY(-3px);box-shadow:0 0 48px rgba(245,197,24,0.55);}
+.btn-g{background:transparent;color:var(--wh);border:1px solid var(--gb);padding:14px 34px;border-radius:40px;font-weight:500;font-size:15px;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;}
+.btn-g:hover{border-color:var(--wh);background:var(--gl);}
+.cta-footer{
+  margin-top:40px;padding-top:28px;
+  border-top:1px solid var(--gb);
+  display:flex;gap:36px;justify-content:center;flex-wrap:wrap;
+}
+.cf-item{text-align:center;}
+.cf-lbl{font-size:10px;color:var(--wd);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.cf-val{font-size:13px;font-weight:600;}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .au{animation:fadeUp .55s ease both;}
+.slide.active .au1{animation-delay:.05s}
+.slide.active .au2{animation-delay:.12s}
+.slide.active .au3{animation-delay:.20s}
+.slide.active .au4{animation-delay:.28s}
+.slide.active .au5{animation-delay:.36s}
+.slide.active .au6{animation-delay:.44s}
+
+/* keyboard hint */
+#keyhint{position:fixed;bottom:80px;right:32px;font-size:11px;color:var(--wd);background:var(--gl);border:1px solid var(--gb);padding:6px 14px;border-radius:20px;pointer-events:none;opacity:0;animation:fadeHint 3s 1.5s ease both;}
+@keyframes fadeHint{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="tb-logo">EDU<span>GUAT</span></div>
+    <div class="tb-dots" id="dots"></div>
+    <div class="tb-slide-info" id="slideInfo">1 / 9</div>
+  </div>
+
+  <!-- VIEWPORT -->
+  <div id="viewport">
+
+    <!-- ── S1: HERO ── -->
+    <div class="slide active" id="s1">
+      <div class="orb" style="width:420px;height:420px;background:rgba(26,79,171,0.38);top:-100px;right:-80px;"></div>
+      <div class="orb" style="width:280px;height:280px;background:rgba(245,197,24,0.10);bottom:-60px;left:-60px;animation:none;filter:blur(100px);"></div>
+      <div class="hero-badge au au1"><span class="live-dot"></span> LIVE · eduguat.com · 4 clientes · Lanzamiento May 2026</div>
+      <h1 class="hero-title au au2"><span class="blue">EDU</span><span class="gold">GUAT</span></h1>
+      <p class="hero-sub au au3">El sistema que está digitalizando la gestión educativa de Guatemala.<br>SaaS · React · Node.js · MySQL · En producción hoy.</p>
+      <div class="hero-stats au au4">
+        <div class="hstat"><span class="hstat-n">4</span><div class="hstat-l">Clientes activos</div></div>
+        <div class="hstat"><span class="hstat-n">Q43K</span><div class="hstat-l">Proyección Año 1</div></div>
+        <div class="hstat"><span class="hstat-n">23.7%</span><div class="hstat-l">Utilidad neta</div></div>
+        <div class="hstat"><span class="hstat-n">11.2m</span><div class="hstat-l">Punto de equilibrio</div></div>
+      </div>
+    </div>
+
+    <!-- ── S2: PROBLEMA ── -->
+    <div class="slide" id="s2">
+      <span class="stag au au1">El Problema</span>
+      <h2 class="stitle au au2">La educación privada de Guatemala<br>sigue siendo <em>manual</em></h2>
+      <p class="sdesc au au3">Cientos de colegios privados gestionan notas, pagos y asistencias en papel o Excel. Tiempo, dinero e información perdida cada día.</p>
+      <div class="pcards au au4">
+        <div class="pcard">
+          <div class="pcard-icon">📋</div>
+          <h3 class="pcard-title">Gestión manual ineficiente</h3>
+          <p class="pcard-text">Notas y asistencias registradas a mano, sin respaldo ni trazabilidad. Errores humanos frecuentes y datos que se pierden.</p>
+        </div>
+        <div class="pcard">
+          <div class="pcard-icon">💸</div>
+          <h3 class="pcard-title">Control financiero nulo</h3>
+          <p class="pcard-text">Las colegiaturas se cobran sin sistema. Los padres no saben su estado de cuenta y la admin pierde horas en cobros manuales.</p>
+        </div>
+        <div class="pcard">
+          <div class="pcard-icon">📡</div>
+          <h3 class="pcard-title">Comunicación desconectada</h3>
+          <p class="pcard-text">Directores, maestros y padres operan en silos. Los comunicados llegan tarde, se pierden o simplemente no llegan.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── S3: SOLUCIÓN ── -->
+    <div class="slide" id="s3">
+      <span class="stag au au1">La Solución</span>
+      <h2 class="stitle au au2">Una plataforma completa para<br><em>todo</em> el colegio</h2>
+      <p class="sdesc au au3" style="margin-bottom:24px">EDUGUAT centraliza cada proceso académico y administrativo. Un login, todo adentro, desde cualquier dispositivo.</p>
+      <div class="fcards au au4">
+        <div class="fcard"><div class="ficon">📊</div><h4 class="ftitle">Gestión de Notas</h4><p class="ftext">Registro, consulta y actualización de calificaciones por docentes en tiempo real.</p></div>
+        <div class="fcard"><div class="ficon">✅</div><h4 class="ftitle">Control de Asistencias</h4><p class="ftext">Registro diario con historial completo y alertas automáticas para administración.</p></div>
+        <div class="fcard"><div class="ficon">💳</div><h4 class="ftitle">Pagos y Solvencias</h4><p class="ftext">Control financiero de colegiaturas, estado de cuenta del alumno y reportes.</p></div>
+        <div class="fcard"><div class="ficon">📝</div><h4 class="ftitle">Tareas Digitales</h4><p class="ftext">Asignación y entrega de tareas sin papel. Maestros califican, alumnos entregan.</p></div>
+        <div class="fcard"><div class="ficon">🔔</div><h4 class="ftitle">Notificaciones</h4><p class="ftext">Comunicados internos, avisos y recordatorios para toda la comunidad educativa.</p></div>
+        <div class="fcard"><div class="ficon">🔐</div><h4 class="ftitle">Roles y Seguridad</h4><p class="ftext">JWT · bcrypt · Backups automáticos en Google Drive. Admin, Maestro, Alumno.</p></div>
+      </div>
+    </div>
+
+    <!-- ── S4: TRACCIÓN ── -->
+    <div class="slide" id="s4">
+      <span class="stag au au1">Tracción Real</span>
+      <h2 class="stitle au au2"><em>Ya estamos</em> en el mercado</h2>
+      <div class="trac-layout au au3">
+        <div>
+          <p style="font-size:13px;color:var(--ws);font-weight:600;margin-bottom:14px;font-family:'Barlow Condensed',sans-serif;">Clientes activos hoy</p>
+          <div class="clist">
+            <div class="ccard"><span class="cbadge cb-sub">Suscripción</span><span class="cname">Colegio A</span><span class="camount">Q300/mes</span></div>
+            <div class="ccard"><span class="cbadge cb-sub">Suscripción</span><span class="cname">Colegio B</span><span class="camount">Q300/mes</span></div>
+            <div class="ccard"><span class="cbadge cb-uni">Pago único</span><span class="cname">Instituto C</span><span class="camount">Q5,000</span></div>
+            <div class="ccard"><span class="cbadge cb-uni">Pago único</span><span class="cname">Academia D</span><span class="camount">Q5,000</span></div>
+          </div>
+        </div>
+        <div class="metrics">
+          <p style="font-size:13px;color:var(--ws);font-weight:600;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;">Indicadores clave</p>
+          <div>
+            <div class="mbar-header"><span class="mbar-lbl">Clientes captados vs meta Año 1</span><span class="mbar-val">4 / 11</span></div>
+            <div class="mbar-bg"><div class="mbar-fill" style="--w:36%"></div></div>
+          </div>
+          <div>
+            <div class="mbar-header"><span class="mbar-lbl">P.E. operativo alcanzado</span><span class="mbar-val">3.2 meses</span></div>
+            <div class="mbar-bg"><div class="mbar-fill" style="--w:75%"></div></div>
+          </div>
+          <div>
+            <div class="mbar-header"><span class="mbar-lbl">Retención de clientes</span><span class="mbar-val">100%</span></div>
+            <div class="mbar-bg"><div class="mbar-fill" style="--w:100%"></div></div>
+          </div>
+          <div class="tech-pill">
+            <p>🛠 Stack en producción</p>
+            <p>React + Vite · Node.js · MySQL · JWT · Vercel · Railway · Google Drive Backups</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── S5: MODELO ── -->
+    <div class="slide" id="s5">
+      <span class="stag au au1">Modelo de Negocio</span>
+      <h2 class="stitle au au2">Ingresos <em>recurrentes</em> + licencias</h2>
+      <div class="pgrid au au3">
+        <div class="pcard2 pri">
+          <p style="font-size:11px;color:var(--blueb);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;font-weight:600;">Suscripción SaaS</p>
+          <div class="pp">Q300 <span>/mes</span></div>
+          <p class="plabel">Por institución · Sin límite de usuarios</p>
+          <ul class="pfeats">
+            <li>Actualizaciones automáticas</li>
+            <li>Soporte técnico continuo</li>
+            <li>Backups diarios Google Drive</li>
+            <li>Acceso multi-sede disponible</li>
+          </ul>
+        </div>
+        <div class="pcard2 feat">
+          <div class="feat-badge">⭐ RECOMENDADO</div>
+          <p style="font-size:11px;color:var(--y);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;font-weight:600;">Licencia Única</p>
+          <div class="pp" style="color:var(--y)">Q5,000 <span style="color:var(--wd)">/único</span></div>
+          <p class="plabel">Pago único + mantenimiento Q300/mes desde año 2</p>
+          <ul class="pfeats">
+            <li>Sistema completo instalado</li>
+            <li>Capacitación al personal</li>
+            <li>Personalización básica incluida</li>
+            <li>Actualización mayor incluida</li>
+          </ul>
+        </div>
+      </div>
+      <div class="market-row au au4">
+        <div class="mitem"><div class="mitem-val">3,000+</div><div class="mitem-lbl">Colegios privados Guatemala</div></div>
+        <div class="mitem"><div class="mitem-val">0.6%</div><div class="mitem-lbl">Penetración meta año 3 = 18 inst.</div></div>
+        <div class="mitem"><div class="mitem-val">Q18M</div><div class="mitem-lbl">TAM estimado Guatemala</div></div>
+        <div class="mitem"><div class="mitem-val" style="color:var(--blueb)">Q326K</div><div class="mitem-lbl">Ingresos totales proyectados 5 años</div></div>
+      </div>
+    </div>
+
+    <!-- ── S6: FINANCIERO ── -->
+    <div class="slide" id="s6">
+      <span class="stag au au1">Plan Financiero</span>
+      <h2 class="stitle au au2">Números que <em>convencen</em></h2>
+      <div class="fin-layout au au3">
+        <div>
+          <p class="chart-title">Ingresos proyectados 5 años (Q)</p>
+          <div class="bars" id="chartBars">
+            <div class="bwrap"><div class="bar" id="b1" style="height:0"><span class="bval">Q43K</span></div><span class="blabel">Año 1</span></div>
+            <div class="bwrap"><div class="bar" id="b2" style="height:0"><span class="bval">Q57K</span></div><span class="blabel">Año 2</span></div>
+            <div class="bwrap"><div class="bar hi" id="b3" style="height:0"><span class="bval">Q75K</span></div><span class="blabel">Año 3</span></div>
+            <div class="bwrap"><div class="bar hi" id="b4" style="height:0"><span class="bval">Q75K</span></div><span class="blabel">Año 4</span></div>
+            <div class="bwrap"><div class="bar hi" id="b5" style="height:0"><span class="bval">Q75K</span></div><span class="blabel">Año 5</span></div>
+          </div>
+          <div class="fin-note">
+            <p>💰 Utilidad acumulada 5 años: <span style="font-family:'Barlow Condensed',sans-serif;font-size:17px;">Q162,015</span></p>
+            <small>Utilidad neta acumulada 5 años · ISR 25% aplicado</small>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-ic">🎯</div><div><div class="kpi-v">11.2 meses</div><div class="kpi-l">Punto de equilibrio (inv. inicial Q13K)</div></div></div>
+          <div class="kpi"><div class="kpi-ic">📈</div><div><div class="kpi-v">23.7%</div><div class="kpi-l">Utilidad neta Año 1</div></div></div>
+          <div class="kpi"><div class="kpi-ic">💼</div><div><div class="kpi-v">Q13,000</div><div class="kpi-l">Inversión inicial total</div></div></div>
+          <div class="kpi"><div class="kpi-ic">🔁</div><div><div class="kpi-v">Q16,950</div><div class="kpi-l">Costo operativo anual (Año 2+)</div></div></div>
+          <div class="kpi"><div class="kpi-ic">🏦</div><div><div class="kpi-v">Q10,395</div><div class="kpi-l">Utilidad neta proyectada Año 1</div></div></div>
+          <div class="kpi"><div class="kpi-ic">⚖️</div><div><div class="kpi-v">Q41,055</div><div class="kpi-l">Utilidad neta anual Año 3+</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── S7: PROYECCIÓN ── -->
+    <div class="slide" id="s7">
+      <span class="stag au au1">Hoja de Ruta</span>
+      <h2 class="stitle au au2">Crecimiento <em>planificado</em></h2>
+      <div class="timeline au au3">
+        <div class="titem">
+          <div class="tyear">2026</div>
+          <div class="tline"><div class="tdot"></div><div class="tconn"></div></div>
+          <div class="tcontent">
+            <h4 class="ttitle">Lanzamiento oficial Mayo 2026 · eduguat.com</h4>
+            <div class="ttags"><span class="ttag y">4 clientes activos</span><span class="ttag g">Q13K invertidos</span><span class="ttag">Lanzamiento May 2026</span><span class="ttag">App web + multi-sede</span></div>
+            <div class="tamount">Q43,800 proyectados · Utilidad Q10,395</div>
+          </div>
+        </div>
+        <div class="titem">
+          <div class="tyear">2027</div>
+          <div class="tline"><div class="tdot"></div><div class="tconn"></div></div>
+          <div class="tcontent">
+            <h4 class="ttitle">Escalar a 13 instituciones suscritas</h4>
+            <div class="ttags"><span class="ttag y">+5 suscripciones nuevas</span><span class="ttag g">28.4K utilidad</span><span class="ttag">App móvil</span><span class="ttag">Mantenimiento licencias</span></div>
+            <div class="tamount">Q57,600 proyectados · Utilidad Q28,455</div>
+          </div>
+        </div>
+        <div class="titem">
+          <div class="tyear">2028</div>
+          <div class="tline"><div class="tdot"></div></div>
+          <div class="tcontent">
+            <h4 class="ttitle">18 instituciones · Expansión Centroamérica</h4>
+            <div class="ttags"><span class="ttag y">Meta regional</span><span class="ttag g">54% margen neto</span><span class="ttag">IA en calificaciones</span><span class="ttag">Portal de padres</span></div>
+            <div class="tamount">Q75,600 proyectados · Utilidad Q41,055</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── S8: EQUIPO ── -->
+    <div class="slide" id="s8">
+      <span class="stag au au1">El Equipo</span>
+      <h2 class="stitle au au2">Emprendedores que <em>construyen</em></h2>
+      <p class="sdesc au au3" style="margin-bottom:20px">5.º Semestre · Ing. en Sistemas · UMG Campus Coatepeque · Construimos el sistema mientras cursamos la carrera.</p>
+      <div class="team-grid au au4">
+        <div class="tcard">
+          <div class="tavatar" style="background:linear-gradient(135deg,#1A4FAB,#5DADE2)">RC</div>
+          <div class="tname">Rony Alexander Castillo López</div>
+          <div class="trole">CEO & Lead Developer</div>
+          <p class="tdesc">Fullstack · Arquitectura del sistema · Backend Node.js · MySQL · Cloud deploy</p>
+        </div>
+        <div class="tcard">
+          <div class="tavatar" style="background:linear-gradient(135deg,#6B1A6B,#C040C0)">CG</div>
+          <div class="tname">Cindy Anali Gómez Loayes</div>
+          <div class="trole">Frontend & UX</div>
+          <p class="tdesc">Diseño de interfaces · Experiencia de usuario · QA del producto</p>
+        </div>
+        <div class="tcard">
+          <div class="tavatar" style="background:linear-gradient(135deg,#1A6B3A,#40C080)">ET</div>
+          <div class="tname">Erick Rolando Tigüilá Mencho</div>
+          <div class="trole">Backend & DB</div>
+          <p class="tdesc">APIs REST · Base de datos relacional · Módulos de seguridad JWT</p>
+        </div>
+        <div class="tcard">
+          <div class="tavatar" style="background:linear-gradient(135deg,#6B3A1A,#C08040)">DE</div>
+          <div class="tname">Denis Echeverría</div>
+          <div class="trole">Comercial & Finanzas</div>
+          <p class="tdesc">Estrategia comercial · Plan financiero · Relaciones con instituciones</p>
+        </div>
+      </div>
+      <div class="team-info au au5">
+        <span class="ti-item">📍 UMG Campus Coatepeque</span>
+        <span class="ti-item">🎓 Ing. en Sistemas · 5.º Semestre</span>
+        <span class="ti-item">📚 Emprendedores de Negocios</span>
+        <span class="ti-item hi">🌐 eduguat.com · En producción</span>
+      </div>
+    </div>
+
+    <!-- ── S9: CTA ── -->
+    <div class="slide" id="s9">
+      <div class="orb" style="width:500px;height:500px;background:rgba(26,79,171,0.42);top:50%;right:-120px;transform:translateY(-50%);"></div>
+      <span class="stag au au1">La Oportunidad</span>
+      <h2 class="cta-title au au2">Invierte en el futuro<br>de la educación</h2>
+      <span class="cta-amount au au3">Q13,000</span>
+      <p class="cta-sub au au4">Es todo lo que se necesitó para construir y lanzar EDUGUAT.<br>Hoy ya tiene clientes. Mañana puede tener cientos.</p>
+      <div class="cta-btns au au5">
+        <button class="btn-y">Quiero Invertir →</button>
+        <button class="btn-g" onclick="window.open('https://github.com/Rotakuny/eduguaty-system','_blank')">Ver en GitHub</button>
+      </div>
+      <div class="cta-footer au au6">
+        <div class="cf-item"><div class="cf-lbl">Proyecto</div><div class="cf-val">EDUGUAT · eduguat.com</div></div>
+        <div class="cf-item"><div class="cf-lbl">Institución</div><div class="cf-val">UMG · Coatepeque</div></div>
+        <div class="cf-item"><div class="cf-lbl">Curso</div><div class="cf-val">Emprendedores de Negocios</div></div>
+        <div class="cf-item"><div class="cf-lbl">Semestre</div><div class="cf-val">Quinto · Ing. Sistemas</div></div>
+        <div class="cf-item"><div class="cf-lbl">Estado</div><div class="cf-val" style="color:var(--y)">🟡 En producción</div></div>
+      </div>
+    </div>
+
+  </div><!-- /viewport -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomnav">
+    <button class="nav-btn" id="btnPrev" onclick="changeSlide(-1)" disabled>← Anterior</button>
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <button class="nav-btn next" id="btnNext" onclick="changeSlide(1)">Siguiente →</button>
+  </div>
+
+</div><!-- /deck -->
+
+<div id="keyhint">← → teclas para navegar</div>
+
+<script>
+const TOTAL = 9;
+let current = 0;
+let animating = false;
+
+const slides = document.querySelectorAll('.slide');
+const dots = document.getElementById('dots');
+const slideInfo = document.getElementById('slideInfo');
+const progressFill = document.getElementById('progress-fill');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+
+// Build dots
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='tb-dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dots.appendChild(d);
+}
+
+function updateUI(){
+  slideInfo.textContent=(current+1)+' / '+TOTAL;
+  progressFill.style.width=((current+1)/TOTAL*100)+'%';
+  btnPrev.disabled=current===0;
+  btnNext.disabled=current===TOTAL-1;
+  btnNext.textContent=current===TOTAL-2?'Ver Inversión →':'Siguiente →';
+  document.querySelectorAll('.tb-dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+}
+
+function goTo(idx){
+  if(animating||idx===current||idx<0||idx>=TOTAL)return;
+  animating=true;
+  const prev=slides[current];
+  const next=slides[idx];
+  prev.classList.add('exit-left');
+  setTimeout(()=>{
+    prev.classList.remove('active','exit-left');
+    current=idx;
+    next.classList.add('active');
+    updateUI();
+    triggerSlideEffects(idx);
+    setTimeout(()=>animating=false,460);
+  },340);
+}
+
+function changeSlide(dir){ goTo(current+dir); }
+
+function triggerSlideEffects(idx){
+  // bars on slide 6
+  if(idx===5){
+    const data=[43,57,75,75,75];
+    const maxH=160;
+    data.forEach((v,i)=>{
+      const b=document.getElementById('b'+(i+1));
+      if(b){b.style.height='0px';setTimeout(()=>{b.style.height=(v/75*maxH)+'px';},i*120+80);}
+    });
+  }
+  // metric bars on slide 4
+  if(idx===3){
+    document.querySelectorAll('.mbar-fill').forEach(el=>{
+      const w=el.style.getPropertyValue('--w');
+      el.style.width='0%';
+      setTimeout(()=>{ el.style.width=w; },300);
+    });
+  }
+}
+
+// keyboard
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')changeSlide(1);
+  if(e.key==='ArrowLeft')changeSlide(-1);
+});
+
+updateUI();
+triggerSlideEffects(0);
+</script>
+</body>
+</html>
